@@ -36,24 +36,38 @@ console.log('Проверка метода ClearBag() у класса Bag: ', ba
 
 //Проверка покупателя
 
-const buyerModel = new Buyer({
-  payment: 'card',
-  address: '',
-  phone: '',
-  email: ''
-})
 
-console.log('Проверка метода GetBuyer() у класса Buyer: ', buyerModel.getBuyer())
-console.log('Проверка метода Validate() у класса Buyer: ', buyerModel.validate())
-buyerModel.updateBuyer('email','123@mail.ru')
-console.log('Проверка метода UpdateBuyer() у класса Buyer (добавил почту): ', buyerModel.getBuyer())
-buyerModel.clearBuyer()
-console.log('Проверка метода ClearBuyer() у класса Buyer: ', buyerModel.getBuyer())
+
+const buyer = new Buyer();
+console.log('--- Покупатель ---');
+console.log('Ошибки валидации (пустая форма):', buyer.validate());
+buyer.setData({ payment: 'cash' });
+console.log('Ошибки после выбора оплаты:', buyer.validate());
+buyer.setData({ address: '' });
+console.log('Ошибки после адреса:', buyer.validate());
+buyer.setData({ email: '', phone: '' });
+console.log('Ошибки после заполнения всех полей:', buyer.validate());
+console.log('Данные покупателя:', buyer.getBuyer());
+buyer.clearBuyer();
+console.log('После очистки данных покупателя:', buyer.getBuyer(), buyer.validate());
+
 
 //Тестирование API
 const api = new Api(API_URL);
 const request = new ApiRequest(api)  
-productsModel.setProducts(await request.getApiProducts());  
-console.log('Тут вывожу список товаров полученных в результате API запроса',productsModel.getProducts())
+async function init() {
+  try {
+    const data = await request.getApiProducts();
+    productsModel.setProducts(data);
+    console.log('Тут вывожу список товаров полученных в результате API запроса', productsModel.getProducts());
+  } catch (error) {
+    console.error('Ошибка запроса:', error);
+    throw error; // Перебрасываем ошибку для обработки в catch при вызове
+  }
+}
+
+// Вызов функции с обработкой ошибок
+init().catch(console.error);
+
 
 

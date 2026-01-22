@@ -1,42 +1,46 @@
-import { IBuyer, TPayment } from "../../types";
+import type { IBuyer, TPayment } from '../../types';
 
+export class Buyer {
+  private payment: TPayment | null = null;
+  private email = '';
+  private phone = '';
+  private address = '';
 
-export class Buyer implements IBuyer {
-  public payment: TPayment;
-  public address: string;
-  public email: string;
-  public phone: string;
-
-  constructor(data: IBuyer) {
-    this.payment = data.payment;
-    this.address = data.address;
-    this.email = data.email;
-    this.phone = data.phone;
-  }
-//Методы
+  constructor () {}
 
 //сохранение данных в модели
-updateBuyer<K extends keyof IBuyer>(field: K, value: IBuyer[K]): void {
+updateBuyer<K extends keyof Buyer>(field: K, value: Buyer[K]): void {
   this[field] = value as this[K];
 }
 
-//получение всех данных покупателя
-getBuyer(): IBuyer {
-  return {
-    payment: this.payment,
-    address: this.address,
-    email: this.email,
-    phone: this.phone
-  };
-}
+  setData(data: Partial<IBuyer>): void {
+    if (data.payment !== undefined) this.payment = data.payment;
+    if (data.email !== undefined) this.email = data.email;
+    if (data.phone !== undefined) this.phone = data.phone;
+    if (data.address !== undefined) this.address = data.address;
+  }
+
+  //получение всех данных покупателя
+
+  getBuyer(): IBuyer | null {
+    if (!this.payment) return null;
+
+    return {
+      payment: this.payment,
+      email: this.email,
+      phone: this.phone,
+      address: this.address,
+    };
+  }
 
 //очистка данных покупателя;
-clearBuyer(): void {
-  this.payment = null
-  this.address = '';
-  this.email = '';
-  this.phone = '';
-}
+
+  clearBuyer(): void {
+    this.payment = null;
+    this.email = '';
+    this.phone = '';
+    this.address = '';
+  }
 
 //валидация данных
 validate(): { [K in keyof IBuyer]?: string } {
