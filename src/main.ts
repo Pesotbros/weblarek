@@ -41,7 +41,7 @@ console.log('Проверка метода ClearBag() у класса Bag: ', ba
 const buyer = new Buyer();
 console.log('--- Покупатель ---');
 console.log('Ошибки валидации (пустая форма):', buyer.validate());
-buyer.setData({ payment: 'cash' });
+buyer.setData({ payment: 'cash'});
 console.log('Ошибки после выбора оплаты:', buyer.validate());
 buyer.setData({ address: '' });
 console.log('Ошибки после адреса:', buyer.validate());
@@ -56,15 +56,11 @@ console.log('После очистки данных покупателя:', buye
 const api = new Api(API_URL);
 const request = new ApiRequest(api)  
 async function init() {
-  try {
-    const data = await request.getApiProducts();
-    productsModel.setProducts(data);
-    console.log('Тут вывожу список товаров полученных в результате API запроса', productsModel.getProducts());
-  } catch (error) {
-    console.error('Ошибка запроса:', error);
-    throw error; // Перебрасываем ошибку для обработки в catch при вызове
-  }
+  const data = await request.getApiProducts();
+  productsModel.setProducts(data);
+  console.log('Тут вывожу список товаров полученных в результате API запроса', productsModel.getProducts());
 }
+
 
 // Вызов функции с обработкой ошибок
 init().catch(console.error);
