@@ -8,10 +8,7 @@ export class Buyer {
 
   constructor () {}
 
-//сохранение данных в модели
-updateBuyer<K extends keyof Buyer>(field: K, value: Buyer[K]): void {
-  this[field] = value as this[K];
-}
+  //сохранение данных
 
   setData(data: Partial<IBuyer>): void {
     if (data.payment !== undefined) this.payment = data.payment;
@@ -22,16 +19,15 @@ updateBuyer<K extends keyof Buyer>(field: K, value: Buyer[K]): void {
 
   //получение всех данных покупателя
 
-  getBuyer(): IBuyer | null {
-    if (!this.payment) return null;
+getBuyer(): IBuyer {
+  return {
+    payment: this.payment,
+    email: this.email || '',
+    phone: this.phone || '',
+    address: this.address || '',
+  };
+}
 
-    return {
-      payment: this.payment,
-      email: this.email,
-      phone: this.phone,
-      address: this.address,
-    };
-  }
 
 //очистка данных покупателя;
 
@@ -43,9 +39,9 @@ updateBuyer<K extends keyof Buyer>(field: K, value: Buyer[K]): void {
   }
 
 //валидация данных
-validate(): { [K in keyof IBuyer]?: string } {
-  const errors: { [K in keyof IBuyer]?: string } = {};
-  if (this.payment == null) {
+validate(): Partial<Record<keyof IBuyer, string>> {
+    const errors: Partial<Record<keyof IBuyer, string>> = {};
+  if (this.payment?.trim()) {
     errors.payment = 'Не выбран тип оплаты';
   }
   if(!this.address?.trim()) {
