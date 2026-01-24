@@ -1,7 +1,7 @@
 import type { IBuyer, TPayment } from '../../types';
 
 export class Buyer {
-  private payment: TPayment | null = null;
+  private payment: TPayment = '';
   private email = '';
   private phone = '';
   private address = '';
@@ -21,10 +21,10 @@ export class Buyer {
 
 getBuyer(): IBuyer {
   return {
-    payment: this.payment = '',
-    email: this.email || '',
-    phone: this.phone || '',
-    address: this.address || '',
+    payment: this.payment,
+    email: this.email ?? '',
+    phone: this.phone ?? '',
+    address: this.address ?? ''
   };
 }
 
@@ -39,21 +39,14 @@ getBuyer(): IBuyer {
   }
 
 //валидация данных
-validate(): Partial<Record<keyof IBuyer, string>> {
+  validate(): Partial<Record<keyof IBuyer, string>> {
     const errors: Partial<Record<keyof IBuyer, string>> = {};
-  if (this.payment?.trim()) {
-    errors.payment = 'Не выбран тип оплаты';
+
+    if (!this.payment) errors.payment = 'Не выбран вид оплаты';
+    if (this.address === '') errors.address = 'Необходимо указать адрес';
+    if (this.email === '') errors.email = 'Укажите email';
+    if (this.phone === '') errors.phone = 'Укажите телефон';
+
+    return errors;
   }
-  if(!this.address?.trim()) {
-    errors.address = 'Укажите адрес';
-  }
-  if (!this.email?.trim()) {
-    errors.email = 'Укажите почту';
-  }
-  if (!this.phone.trim()) {
-    errors.phone = 'Укажите телефон';
-  }
-  
-  return errors
-}
 }
