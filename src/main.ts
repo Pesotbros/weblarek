@@ -41,11 +41,11 @@ console.log('Проверка метода ClearBag() у класса Bag: ', ba
 const buyer = new Buyer();
 console.log('--- Покупатель ---');
 console.log('Ошибки валидации (пустая форма):', buyer.validate());
-buyer.setData({ payment: 'cash'});
+buyer.setData({ payment: 'cash' });
 console.log('Ошибки после выбора оплаты:', buyer.validate());
-buyer.setData({ address: '' });
+buyer.setData({ address: 'Г. , ул. , д.' });
 console.log('Ошибки после адреса:', buyer.validate());
-buyer.setData({ email: '', phone: '' });
+buyer.setData({ email: 'test@example.com', phone: '+8 (800) 555-35-35' });
 console.log('Ошибки после заполнения всех полей:', buyer.validate());
 console.log('Данные покупателя:', buyer.getBuyer());
 buyer.clearBuyer();
