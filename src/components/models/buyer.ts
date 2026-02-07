@@ -1,20 +1,23 @@
 import type { IBuyer, TPayment } from '../../types';
+import { EventEmitter } from "../base/Events";
 
-export class Buyer {
-  private payment: TPayment = '';
-  private email = '';
-  private phone = '';
-  private address = '';
+type BuyerChangeField = keyof IBuyer | "clear";
 
-  constructor () {}
+export class Buyer implements IBuyer {
+  public payment: TPayment = '';
+  public address: string = "";
+  public email: string = "";
+  public phone: string = "";
+  private events?: EventEmitter;
 
-  //сохранение данных
+  constructor(events?: EventEmitter) {
+    this.events = events;
+  }
+  //Методы
 
-  setData(data: Partial<IBuyer>): void {
-    if (data.payment !== undefined) this.payment = data.payment;
-    if (data.email !== undefined) this.email = data.email;
-    if (data.phone !== undefined) this.phone = data.phone;
-    if (data.address !== undefined) this.address = data.address;
+  updateBuyer<K extends keyof IBuyer>(field: K, value: IBuyer[K]): void {
+    this[field] = value as this[K];
+    this.events?.emit("buyer:change", { field: field as BuyerChangeField });
   }
 
   //получение всех данных покупателя
@@ -36,6 +39,7 @@ getBuyer(): IBuyer {
     this.email = '';
     this.phone = '';
     this.address = '';
+    this.events?.emit("buyer:change", { field: "clear" });
   }
 
 //валидация данных

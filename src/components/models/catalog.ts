@@ -1,17 +1,26 @@
 import { IProduct } from "../../types";
+import { EventEmitter } from "../base/Events";
 
 export class Catalog {
   // Список всех продуктов в каталоге
   private products: IProduct[] = [];
 
-  // Текущий выбранный продукт 
-  private selectedProduct: IProduct | null = null;
+  // Текущий выбранный продукт
+  private selectedProduct: string | null = null;
+
+  //Слушатель
+  private events?: EventEmitter;
+
+  constructor(events?: EventEmitter) {
+    this.events = events;
+  }
 
   //Методы
 
   // сохранение массива товаров полученного в параметрах метода;
   setProducts(products: IProduct[]): void {
     this.products = products;
+    this.events?.emit("catalog:changed");
   }
 
   // получение массива товаров из модели;
@@ -25,12 +34,14 @@ export class Catalog {
   }
 
   // сохранение товара для подробного отображения;
-  setSelectedProduct(product: IProduct): void {
-    this.selectedProduct = product;
+  setSelectedProduct(id: string): void {
+    this.selectedProduct = id;
+    this.events?.emit("catalog:select");
   }
 
   // получение товара для подробного отображения.
   getSelectedProduct(): IProduct | null {
-    return this.selectedProduct;
+    if (!this.selectedProduct) return null;
+    return this.getProductById(this.selectedProduct) ?? null;
   }
 }

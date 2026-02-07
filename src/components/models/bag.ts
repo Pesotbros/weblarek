@@ -1,14 +1,21 @@
 import { IProduct } from "../../types";
+import { EventEmitter } from "../base/Events";
 
 export class Bag {
   // Список всех продуктов в каталоге
   private products: IProduct[] = [];
+  private events?: EventEmitter;
+
+  constructor(events?: EventEmitter) {
+    this.events = events;
+  }
 
   /////////////////Методы ///////////////
 
   //добавление товара, который был получен в параметре, в массив корзины;
   addProduct(product: IProduct) {
     this.products.push(product);
+    this.events?.emit("cart:changed");
   }
 
   //удаление товара, полученного в параметре из массива корзины;
@@ -17,6 +24,7 @@ export class Bag {
     if (index !== -1) {
       this.products.splice(index, 1);
     }
+    this.events?.emit("cart:changed");
   }
 
   //получение количества товаров в корзине;
@@ -31,8 +39,10 @@ export class Bag {
 
   //получение стоимости всех товаров в корзине;
   sumProducts(): number {
-    return this.products
-      .reduce((sum, product) => sum + (product.price || 0), 0);
+    return this.products.reduce(
+      (sum, product) => sum + (product.price || 0),
+      0,
+    );
   }
 
   //проверка наличия товара в корзине по его id, полученного в параметр метода.
@@ -42,5 +52,6 @@ export class Bag {
 
   clearBag(): void {
     this.products = [];
+    this.events?.emit("cart:changed");
   }
 }
