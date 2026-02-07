@@ -25,14 +25,6 @@ export class ContactsForm extends Form<IContactsFormData> {
       'input[name="phone"]',
       this.form,
     );
-
-    this.emailInput.addEventListener("input", () => {
-      this.onChange("email", this.emailInput.value);
-    });
-
-    this.phoneInput.addEventListener("input", () => {
-      this.onChange("phone", this.phoneInput.value);
-    });
   }
 
   set email(value: string) {
@@ -43,3 +35,4 @@ export class ContactsForm extends Form<IContactsFormData> {
     this.phoneInput.value = value;
   }
 }
+
