@@ -185,7 +185,7 @@ function openContacts() {
   modal.open();
 }
 
-function opensuccess(total: number) {
+function openSuccess(total: number) {
   modal.content = success.render({ total });
   modal.open();
 }
@@ -300,7 +300,7 @@ events.on("contacts:submit", async () => {
     await apirequest.sendApiProducts(order as any);
     bag.clearBag();
     buyer.clearBuyer();
-    opensuccess(total);
+    openSuccess(total);
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     contactsFormView.render({
